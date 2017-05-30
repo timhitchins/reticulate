@@ -174,7 +174,7 @@ py_discover_config <- function(required_module = NULL) {
 }
 
 
-#' Discover versions of Python installed on a Widnows system
+#' Discover versions of Python installed on a Windows system
 #' 
 #' @return Data frame with `type`, `hive`, `install_path`, `executable_path`,
 #'   and `version`.
@@ -433,7 +433,7 @@ windows_registry_anaconda_versions <- function() {
 }
 
 read_python_versions_from_registry <- function(hive, key,type=key) {
-  versions <- c()
+  
   python_core_key <- tryCatch(utils::readRegistry(
     key = paste0("SOFTWARE\\Python\\", key), hive = hive, maxdepth = 3),
     error = function(e) NULL)
@@ -452,12 +452,10 @@ read_python_versions_from_registry <- function(hive, key,type=key) {
       if (is.list(version_key) && !is.null(version_key$InstallPath)) {
         version_dir <- version_key$InstallPath$`(Default)`
         if (!is.null(version_dir) && utils::file_test("-d", version_dir)) {
-          types <- c(types, type)
-          hives <- c(hives, hive)
+          
+          # determine install_path and executable_path
           install_path <- version_dir
-          install_paths <- c(install_paths, utils::shortPathName(install_path))
           executable_path <- file.path(install_path, "python.exe")
-          executable_paths <- c(executable_paths, utils::shortPathName(executable_path))
           
           # determine version and arch
           if (type == "Anaconda") {
@@ -467,7 +465,8 @@ read_python_versions_from_registry <- function(hive, key,type=key) {
               version <- paste(matches[[2]], matches[[3]], sep = ".")
               arch <- matches[[4]]
             } else {
-              warning("Unexpected format for Anaconda version: ", version)
+              warning("Unexpected format for Anaconda version: ", version,
+                      "\n(Please install a more recent version of Anaconda)")
               arch <- NA
             }
           } else { # type == "PythonCore"
@@ -490,15 +489,21 @@ read_python_versions_from_registry <- function(hive, key,type=key) {
             }
           }
           
-          # convert to R arch
-          if (arch == "32")
-            arch <- "i386"
-          else if (arch == "64")
-            arch <- "x64"
-          
-          
-          versions <- c(versions, version)
-          archs <- c(archs, arch)
+          if (!is.na(arch)) {
+            # convert to R arch
+            if (arch == "32")
+              arch <- "i386"
+            else if (arch == "64")
+              arch <- "x64"
+            
+            # append to vectors
+            types <- c(types, type)
+            hives <- c(hives, hive)
+            install_paths <- c(install_paths, utils::shortPathName(install_path))
+            executable_paths <- c(executable_paths, utils::shortPathName(executable_path))
+            versions <- c(versions, version)
+            archs <- c(archs, arch)
+          }
         }
       }
     }

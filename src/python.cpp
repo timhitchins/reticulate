@@ -1580,7 +1580,9 @@ bool py_has_attr_impl(PyObjectRef x, const std::string& name) {
 // [[Rcpp::export]]
 PyObjectRef py_get_attr_impl(PyObjectRef x, const std::string& name, bool silent = false) {
 
-  PyObject* attr = PyObject_GetAttrString(x, name.c_str());
+  PyObjectPtr name_str(as_python_str(name));
+  
+  PyObject* attr = PyObject_GenericGetAttr(x, name_str);
 
   if (attr == NULL) {
 
@@ -1601,11 +1603,11 @@ PyObjectRef py_get_attr_impl(PyObjectRef x, const std::string& name, bool silent
 
 // [[Rcpp::export]]
 void py_set_attr_impl(PyObjectRef x, const std::string& name, RObject value) {
-  int res = PyObject_SetAttrString(x, name.c_str(), r_to_py(value, x.convert()));
+  PyObjectPtr name_str(as_python_str(name));
+  int res = PyObject_GenericSetAttr(x, name_str, r_to_py(value, x.convert()));
   if (res != 0)
     stop(py_fetch_error());
 }
-  
 
 
 // [[Rcpp::export]]

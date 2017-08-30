@@ -183,6 +183,8 @@ LIBPYTHON_EXTERN PyObject* (*PyObject_CallFunctionObjArgs)(PyObject *callable,
 LIBPYTHON_EXTERN PyObject* (*PyObject_GetAttrString)(PyObject*, const char *);
 LIBPYTHON_EXTERN int (*PyObject_HasAttrString)(PyObject*, const char *);
 LIBPYTHON_EXTERN int (*PyObject_SetAttrString)(PyObject*, const char *, PyObject*);
+LIBPYTHON_EXTERN PyObject* (*PyObject_GenericGetAttr)(PyObject *o, PyObject *name);
+LIBPYTHON_EXTERN int (*PyObject_GenericSetAttr)(PyObject *o, PyObject *name, PyObject *value);
 
 LIBPYTHON_EXTERN Py_ssize_t (*PyTuple_Size)(PyObject *);
 LIBPYTHON_EXTERN PyObject* (*PyTuple_GetItem)(PyObject *, Py_ssize_t);

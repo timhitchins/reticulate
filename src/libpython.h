@@ -45,12 +45,6 @@ struct _typeobject *ob_type;
 PyObject_HEAD                           \
   Py_ssize_t ob_size;
 
-typedef struct _typeobject {
-PyObject_VAR_HEAD
-  const char *tp_name;
-  Py_ssize_t tp_basicsize, tp_itemsize;
-} PyTypeObject;
-
 typedef struct _object {
 PyObject_HEAD
 } PyObject;
@@ -82,6 +76,21 @@ typedef int (*inquiry)(PyObject *);
 typedef int (*visitproc)(PyObject *, void *);
 typedef int (*traverseproc)(PyObject *, visitproc, void *);
 typedef void (*freefunc)(void *);
+typedef void (*destructor)(PyObject *);
+typedef int (*printfunc)(PyObject *, FILE *, int);
+typedef PyObject *(*getattrfunc)(PyObject *, const char *);
+typedef int (*setattrfunc)(PyObject *, const char *, PyObject *);
+
+typedef struct _typeobject {
+  PyObject_VAR_HEAD
+  const char *tp_name;
+  Py_ssize_t tp_basicsize, tp_itemsize;
+  destructor tp_dealloc;
+  printfunc tp_print;
+  getattrfunc tp_getattr;
+  setattrfunc tp_setattr;
+} PyTypeObject;
+
 
 typedef struct PyModuleDef_Base {
   PyObject_HEAD3

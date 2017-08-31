@@ -1580,7 +1580,13 @@ bool py_has_attr_impl(PyObjectRef x, const std::string& name) {
 // [[Rcpp::export]]
 PyObjectRef py_get_attr_impl(PyObjectRef x, const std::string& name, bool silent = false) {
 
-  PyObject* attr = PyObject_GetAttrString(x, name.c_str());
+  // establish getter function
+  getattrfunc getter = x.get()->ob_type->tp_getattr;
+  if (!getter)
+    getter = PyObject_GetAttrString;
+  
+  // get the attribute
+  PyObject* attr = getter(x, name.c_str());
 
   if (attr == NULL) {
 
@@ -1601,7 +1607,14 @@ PyObjectRef py_get_attr_impl(PyObjectRef x, const std::string& name, bool silent
 
 // [[Rcpp::export]]
 void py_set_attr_impl(PyObjectRef x, const std::string& name, RObject value) {
-  int res = PyObject_SetAttrString(x, name.c_str(), r_to_py(value, x.convert()));
+  
+  // establish setter function
+  setattrfunc setter = x.get()->ob_type->tp_setattr;
+  if (!setter)
+    setter = PyObject_SetAttrString;
+  
+  // set the attribute
+  int res = setter(x, name.c_str(), r_to_py(value, x.convert()));
   if (res != 0)
     stop(py_fetch_error());
 }

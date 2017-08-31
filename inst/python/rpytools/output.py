@@ -36,6 +36,7 @@ class OutputRemap(object):
   
   def write(self, message):
     self.handler(message)
+    return len(message)
     
   def __getattr__(self, attr): 
     if (self.target): 
@@ -50,10 +51,10 @@ class OutputRemap(object):
     return None
 
 
-def remap_output_streams(r_stdout, r_stderr):
-  if (sys.stdout is None):
+def remap_output_streams(r_stdout, r_stderr, force):
+  if (force or (sys.stdout is None)):
     sys.stdout = OutputRemap(sys.stdout, r_stdout)
-  if (sys.stderr is None):
+  if (force or (sys.stderr is None)):
     sys.stderr = OutputRemap(sys.stderr, r_stderr)
 
 

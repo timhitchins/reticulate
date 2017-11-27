@@ -24,8 +24,10 @@ py_function_wrapper <- function(python_function, r_prefix = NULL, r_function = N
   
   # title/description
   write(sprintf("#' %s\n#' ", docs$description), file = con)
-  details <- gsub("\n", "\n#' ", docs$details, fixed = TRUE)
-  write(sprintf("#' %s\n#' ", details), file = con)
+  if (nchar(docs$details) > 0) {
+    details <- gsub("\n", "\n#' ", docs$details, fixed = TRUE)
+    write(sprintf("#' %s\n#' ", details), file = con)
+  }
   
   # parameters
   for (param in names(docs$parameters))

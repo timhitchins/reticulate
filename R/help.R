@@ -90,7 +90,7 @@ help_completion_handler.python.builtin.object <- function(topic, source) {
     doc <- ""
   
   # extract preamble
-  arguments_matches <- regexpr(pattern ='\nArg(s|uments):', doc)
+  arguments_matches <- regexpr(pattern ='\n(# )?Arg(s|uments):?', doc)
   if (arguments_matches[[1]] != -1)
     description <- substring(doc, 1, arguments_matches[[1]])
   else
@@ -277,6 +277,8 @@ sections_from_doc <- function(doc) {
   # grab section headers
   doc <- strsplit(doc, "\n", fixed = TRUE)[[1]]
   section_lines <- which(grepl("^\\w(\\w|\\s)+:", doc))
+  if (length(section_lines) == 0)
+    section_lines <- which(grepl("^# (\\w|\\s)+$", doc))
 
   # for each section
   for (i in section_lines) {
@@ -284,6 +286,7 @@ sections_from_doc <- function(doc) {
     # get the section line and name
     section_line <- i
     section_name <- gsub(":\\s*$", "", doc[[i]])
+    section_name <- gsub("^# ", "", section_name)
     
     # collect the sections text
     section_text <- c()

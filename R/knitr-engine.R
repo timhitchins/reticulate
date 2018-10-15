@@ -216,18 +216,25 @@ eng_python_initialize_matplotlib <- function(options,
   # with RStudio Desktop as attempting to use a Qt backend will cause issues due
   # to mismatched Qt versions between RStudio and Anaconda environments, and
   # will cause crashes when attempting to generate plots
-  if (is_rstudio_desktop()) {
-
+  #
+  # we also want to avoid using the 'TkAgg' backend, as some environments hosting
+  # RStudio (e.g. AWS, RStudio Cloud) may not provide the requisite Tk libraries
+  if (is_rstudio()) {
     matplotlib <- import("matplotlib", convert = TRUE)
 
     # check to see if a backend has already been initialized. if so, we
     # need to switch backends; otherwise, we can simply request to use a
     # specific one when the backend is initialized later
     sys <- import("sys", convert = FALSE)
-    if ("matplotlib.backends" %in% names(sys$modules))
-      matplotlib$pyplot$switch_backend("agg")
-    else
-      matplotlib$use("agg", warn = FALSE, force = TRUE)
+    activeBackend <- matplotlib$get_backend()
+    requestedBackend <- getOption("reticulate.matplotlib.backend", default = "Agg")
+    if (!identical(tolower(activeBackend), tolower(requestedBackend)))
+    {
+      if ("matplotlib.backends" %in% names(sys$modules))
+        matplotlib$pyplot$switch_backend(requestedBackend)
+      else
+        matplotlib$use(requestedBackend, warn = FALSE, force = TRUE)
+    }
   }
 
   # double-check that we can load 'pyplot' (this can fail if matplotlib

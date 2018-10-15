@@ -3,6 +3,12 @@
 
 Install the development version with: `devtools::install_github("rstudio/reticulate")`
 
+- When `reticulate` is run within RStudio, the `matplotlib` backend is now
+  set to `Agg` by default. This avoids crashes when using the `Qt5Agg` backend
+  in Anaconda environments, and initialization failures when using the (default)
+  `TkAgg` backend in environments lacking the requisite Tk libraries. This can be
+  overridden with the `reticulate.matplotlib.backend` R option if desired.
+  
 - Reticulate better handles conversions of R lists to Python, and similarly,
   Python lists to R. We now call `r_to_py()` on each sub-element of an R list,
   and similarly, `py_to_r()` on each sub-element of a Python list.
@@ -24,9 +30,6 @@ Install the development version with: `devtools::install_github("rstudio/reticul
 - Allow syntax errors in Python chunks with 'eval = FALSE' (#343)
 
 - Avoid dropping blank lines in Python chunks (#328)
-
-- Use "agg" matplotlib backend when running under RStudio Desktop (avoids
-  crashes when attempting to generate Python plots)
 
 - Add `as.character()` S3 method for Python bytes (defaults to converting using 
   UTF-8 encoding)

@@ -33,32 +33,33 @@ is_python_initialized <- function() {
 
 ensure_python_initialized <- function(required_module = NULL) {
 
-  if (!is_python_initialized()) {
-    # give delay load modules priority
-    use_environment <- NULL
-    if (!is.null(.globals$delay_load_module)) {
-      required_module <- .globals$delay_load_module
-      use_environment <- .globals$delay_load_environment
-      .globals$delay_load_module <- NULL # one shot
-      .globals$delay_load_environment <- NULL
-      .globals$delay_load_priority <- 0
-    }
-
-    .globals$py_config <- initialize_python(required_module, use_environment)
-
-    # remap output streams to R output handlers
-    remap_output_streams()
-    
-    # generate 'R' helper object
-    py_inject_r(envir = globalenv())
-    
-    # inject hooks
-    py_inject_hooks()
-    
-    # install required packages
-    configure_environment()
-
+  if (is_python_initialized())
+    return()
+  
+  # give delay load modules priority
+  use_environment <- NULL
+  if (!is.null(.globals$delay_load_module)) {
+    required_module <- .globals$delay_load_module
+    use_environment <- .globals$delay_load_environment
+    .globals$delay_load_module <- NULL # one shot
+    .globals$delay_load_environment <- NULL
+    .globals$delay_load_priority <- 0
   }
+  
+  .globals$py_config <- initialize_python(required_module, use_environment)
+  
+  # remap output streams to R output handlers
+  remap_output_streams()
+  
+  # generate 'R' helper object
+  py_inject_r(envir = globalenv())
+  
+  # inject hooks
+  py_inject_hooks()
+  
+  # install required packages
+  configure_environment()
+  
 }
 
 initialize_python <- function(required_module = NULL, use_environment = NULL) {
@@ -196,7 +197,7 @@ initialize_python <- function(required_module = NULL, use_environment = NULL) {
   callback <- getOption("reticulate.initialized")
   if (is.function(callback))
     callback()
-
+  
   # return config
   config
 }

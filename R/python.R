@@ -1,4 +1,8 @@
 
+# environment tracking the names of Python modules
+# which were loaded (used when invoking post-load callbacks)
+.py_pending_modules <- new.env(parent = emptyenv())
+
 #' @export
 print.python.builtin.object <- function(x, ...) {
   str(x, ...)
@@ -1275,4 +1279,17 @@ py_inject_hooks <- function() {
     builtins[[name]] <- input
   }
   
+  # create meta module loader
+  module <- import("rpytools.loader", convert = TRUE)
+  module$set_callback(py_module_loaded)
+  
+  # put it on the meta_path
+  loader <- module$ReticulateMetaLoader
+  sys <- import("sys", convert = FALSE)
+  sys$meta_path$insert(0L, loader)
+  
+}
+
+py_module_loaded <- function(fullname, path, target = NULL) {
+  assign(fullname, TRUE, envir = .py_pending_modules)
 }

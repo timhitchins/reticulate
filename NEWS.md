@@ -1,6 +1,11 @@
 
 ## reticulate 1.17 (UNRELEASED)
 
+- `reticulate` now places a custom loader on the `sys.meta_path`, used to
+  detect when Python modules are loaded. This mechanism should be more robust
+  when the import of a particular module also requires the import of other
+  Python module dependencies.
+
 - `reticulate::import_from_path()` now accepts the `delay_load` parameter,
   allowing modules which should be loaded from a pre-specified path
   to be lazy-loaded.

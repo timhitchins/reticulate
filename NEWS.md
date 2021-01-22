@@ -1,6 +1,10 @@
 
 ## reticulate 1.19 (UNRELEASED)
 
+- `reticulate` gains the `py_version()` function, as a helper for accessing
+  `py_config()$version`. If Python has not yet been initialized, the function
+  returns `NULL`.
+  
 - `reticulate` gains the `install_python()` function, used to install different
   versions of Python via [pyenv](https://github.com/pyenv/pyenv)
   ([pyenv-windows](https://github.com/pyenv-win/pyenv-win) on Windows).

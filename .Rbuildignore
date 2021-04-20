@@ -20,6 +20,8 @@ README\.html
 ^pkgdown$
 ^revdep$
 ^tags$
+^tests/testthat/resources/.*\.html$
+^tests/testthat/resources/.*_files
 ^vignettes/images/code_completion\.png$
 ^vignettes/images/help\.png$
 ^vignettes/images/repl_python\.png$
@@ -29,4 +31,3 @@ README\.html
 ^vignettes/rstudio_ide\.Rmd$
 ^vignettes/rstudio_ide\.html$
 __pycache__
-^tests/testthat/resources/.*_files

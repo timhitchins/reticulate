@@ -6,6 +6,9 @@ run <- function() {
     return()
   }
   
+  if (requireNamespace("rlang", quietly = TRUE))
+    options(error = rlang::trace_back)
+  
   library(testthat)
   library(reticulate)
   

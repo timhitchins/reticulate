@@ -1,6 +1,9 @@
 
-## reticulate 1.21  (UNRELEASED)
+## reticulate 1.21
 
+- Fixed an issue where `install_miniconda(update = TRUE, force = TRUE)`
+  would fail to succeed. (#1041)
+  
 - `use_condaenv("base")` can now be used to activate the base Anaconda
   environment.
 

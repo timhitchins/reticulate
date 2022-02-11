@@ -245,6 +245,30 @@ as.environment.python.builtin.object <- function(x) {
 #' @export
 `[[<-.python.builtin.object` <- `$<-.python.builtin.object`
 
+#' @export
+`[<-.python.builtin.object` <- function(x, ..., value) {
+  py_validate_xptr(x)
+  here <- environment()
+  dots <- eval(substitute(alist(...)))
+  builtin_slice <- import_builtins()$slice
+
+  key <- lapply(seq_along(dots), function(i) {
+    if (identical(dots[[i]], quote(expr=))) # is missing
+      builtin_slice(NULL)
+    else
+      eval(sprintf("..%i", i), here)
+  })
+
+  if (is_scalar(length(key)))
+    key <- key[[1L]]
+  else if (identical(length(key), 0L))
+    key <- builtin_slice(NULL)
+
+  py_set_item(x, key, value)
+  x
+}
+
+
 
 #' @export
 .DollarNames.python.builtin.module <- function(x, pattern = "") {

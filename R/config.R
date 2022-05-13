@@ -577,12 +577,6 @@ python_munge_path <- function(python) {
       intern = TRUE
     )
 
-    # test patch
-    print(class(new_path))
-    if(length(new_path) > 1){
-      new_path <- new_path[length(new_path)]
-    }
-
     old_path <- Sys.getenv("PATH")
     message("old_path")
     print(old_path)

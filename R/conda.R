@@ -858,8 +858,11 @@ conda_run2_windows <-
       paste("CALL", shQuote(conda), "activate", shQuote(envname))
     }
 
-  message(activate_cmd)
+  message("activate_cmd")
   print(activate_cmd)
+  message("cmd_line")
+  print(activate_cmd)
+  print(cmd_line)
 
   fi <- tempfile(fileext = ".bat")
   on.exit(unlink(fi))
@@ -875,7 +878,13 @@ conda_run2_windows <-
   print(intern)
 
 
-  shell(fi, intern = intern)
+  new_path <- shell(fi, intern = intern)
+  # test patch
+  print(class(new_path))
+  if(length(new_path) > 1){
+    new_path <- new_path[length(new_path)]
+  }
+  return(new_path)
 }
 
 conda_run2_nix <-

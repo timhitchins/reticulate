@@ -867,7 +867,8 @@ conda_run2_windows <-
   fi <- tempfile(fileext = ".bat")
   on.exit(unlink(fi))
   writeLines(c(
-    if(!echo) "@echo off",
+    # if(!echo) "@echo off",
+    if(echo) "@echo off",
     activate_cmd,
     cmd_line
   ), fi)
@@ -881,9 +882,9 @@ conda_run2_windows <-
   new_path <- shell(fi, intern = intern)
   # test patch
   print(class(new_path))
-  if(length(new_path) > 1){
-    new_path <- new_path[length(new_path)]
-  }
+  # if(length(new_path) > 1){
+  #   new_path <- new_path[length(new_path)]
+  # }
   return(new_path)
 }
 

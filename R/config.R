@@ -543,9 +543,11 @@ python_munge_path <- function(python) {
   # we do this up-front in python_config as otherwise attempts to discover
   # and load numpy can fail, especially on Windows
   # https://github.com/rstudio/reticulate/issues/367
-  python_home <<- dirname(python)
-  python_dirs <<- c(normalizePath(python_home))
+  python_home <- dirname(python)
+  python_dirs <- c(normalizePath(python_home))
 
+  print(python_home)
+  print(python_dirs)
   # fix rpath for anaconda libmkl
   if (is_osx()) {
     libmkl <- file.path(python_home, "../lib/libmkl_intel_thread.dylib")
@@ -559,9 +561,11 @@ python_munge_path <- function(python) {
 
 
   if (is_conda_python(python)) {
-    conda_info <<- get_python_conda_info(python)
+    conda_info <- get_python_conda_info(python)
+    print("conda_info")
+    print(conda_info)
 
-    new_path <<- conda_run2(
+    new_path <- conda_run2(
       "python",
       c("-c", shQuote("import os; print(os.environ['PATH'])")),
       conda = conda_info$conda,
@@ -570,6 +574,10 @@ python_munge_path <- function(python) {
     )
 
     old_path <- Sys.getenv("PATH")
+    print("old_path")
+    print(old_path)
+    print("new_path")
+    print(new_path)
     Sys.setenv("PATH" = new_path)
     return(old_path)
   }

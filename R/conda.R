@@ -848,9 +848,8 @@ conda_run2_windows <-
   activate.bat <- normalizePath(file.path(dirname(conda), "activate.bat"),
                                 mustWork = FALSE)
 
-  print("activate.bat")
+  message("activate.bat")
   print(activate.bat)
-  print("\n")
 
   activate_cmd <-
     if (file.exists(activate.bat)) {
@@ -858,6 +857,9 @@ conda_run2_windows <-
     } else {
       paste("CALL", shQuote(conda), "activate", shQuote(envname))
     }
+
+  message(activate_cmd)
+  print(activate_cmd)
 
   fi <- tempfile(fileext = ".bat")
   on.exit(unlink(fi))
@@ -867,12 +869,11 @@ conda_run2_windows <-
     cmd_line
   ), fi)
 
-  print("fi")
+  message("fi")
   print(fi)
-  print("\n")
-  print("intern")
+  message("intern")
   print(intern)
-  print("\n")
+
 
   shell(fi, intern = intern)
 }

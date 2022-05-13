@@ -566,9 +566,8 @@ python_munge_path <- function(python) {
 
   if (is_conda_python(python)) {
     conda_info <- get_python_conda_info(python)
-    print("conda_info")
+    message("conda_info")
     print(conda_info)
-    print("\n")
 
     new_path <- conda_run2(
       "python",
@@ -579,14 +578,15 @@ python_munge_path <- function(python) {
     )
 
     # test patch
+    print(class(new_path))
     if(is.list(new_path)){
       new_path <- new_path[[length(new_path)]]
     }
 
     old_path <- Sys.getenv("PATH")
-    print("old_path")
+    message("old_path")
     print(old_path)
-    print("new_path")
+    message("new_path")
     print(new_path)
     Sys.setenv("PATH" = new_path)
     return(old_path)

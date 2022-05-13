@@ -864,11 +864,12 @@ conda_run2_windows <-
   print(activate_cmd)
   print(cmd_line)
 
-  fi <- tempfile(fileext = ".bat")
+  fi <- tempfile(tmpdir = Sys.getenv("TEMP"), fileext = ".bat")
+  # fi <- tempfile(fileext = ".bat")
+
   on.exit(unlink(fi))
   writeLines(c(
-    # if(!echo) "@echo off",
-    if(echo) "@echo off",
+    if(!echo) "@echo off",
     activate_cmd,
     cmd_line
   ), fi)

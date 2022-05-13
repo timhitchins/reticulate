@@ -546,12 +546,12 @@ python_munge_path <- function(python) {
   python_home <- dirname(python)
   python_dirs <- c(normalizePath(python_home))
 
-  print("python_home")
+  message("python_home")
   print(python_home)
-  print("\n")
+
   print("python_dirs")
-  print(python_dirs)
-  print("\n")
+  message(python_dirs)
+
   # fix rpath for anaconda libmkl
   if (is_osx()) {
     libmkl <- file.path(python_home, "../lib/libmkl_intel_thread.dylib")
@@ -579,8 +579,8 @@ python_munge_path <- function(python) {
 
     # test patch
     print(class(new_path))
-    if(is.list(new_path)){
-      new_path <- new_path[[length(new_path)]]
+    if(length(new_path) > 1){
+      new_path <- new_path[length(new_path)]
     }
 
     old_path <- Sys.getenv("PATH")

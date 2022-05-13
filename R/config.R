@@ -546,8 +546,12 @@ python_munge_path <- function(python) {
   python_home <- dirname(python)
   python_dirs <- c(normalizePath(python_home))
 
+  print("python_home")
   print(python_home)
+  print("\n")
+  print("python_dirs")
   print(python_dirs)
+  print("\n")
   # fix rpath for anaconda libmkl
   if (is_osx()) {
     libmkl <- file.path(python_home, "../lib/libmkl_intel_thread.dylib")
@@ -564,6 +568,7 @@ python_munge_path <- function(python) {
     conda_info <- get_python_conda_info(python)
     print("conda_info")
     print(conda_info)
+    print("\n")
 
     new_path <- conda_run2(
       "python",
@@ -572,6 +577,11 @@ python_munge_path <- function(python) {
       envname = conda_info$root,
       intern = TRUE
     )
+
+    # test patch
+    if(is.list(new_path)){
+      new_path <- new_path[[length(new_path)]]
+    }
 
     old_path <- Sys.getenv("PATH")
     print("old_path")

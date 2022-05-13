@@ -864,8 +864,7 @@ conda_run2_windows <-
   print(activate_cmd)
   print(cmd_line)
 
-  fi <- tempfile(tmpdir = Sys.getenv("TEMP"), fileext = ".bat")
-  # fi <- tempfile(fileext = ".bat")
+  fi <- tempfile(fileext = ".bat")
 
   on.exit(unlink(fi))
   writeLines(c(
@@ -881,11 +880,12 @@ conda_run2_windows <-
 
 
   new_path <- shell(fi, intern = intern)
+
   # test patch
   print(class(new_path))
-  # if(length(new_path) > 1){
-  #   new_path <- new_path[length(new_path)]
-  # }
+  if(length(new_path) > 1){
+    new_path <- new_path[length(new_path)]
+  }
   return(new_path)
 }
 
